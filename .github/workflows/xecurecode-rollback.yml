@@ -19,11 +19,16 @@ jobs:
     name: Execute Emergency Microservices Rollback
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Target Stable Commit
+      - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.client_payload.target_sha || github.event.inputs.target_sha }}
           fetch-depth: 0
+
+      - name: Checkout Target Stable Commit
+        run: |
+          TARGET="${{ github.event.client_payload.target_sha || github.event.inputs.target_sha }}"
+          echo "▶ Checking out target release: $TARGET"
+          git checkout "$TARGET"
 
       - name: Log Rollback Details
         run: |
