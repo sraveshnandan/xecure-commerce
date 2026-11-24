@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  checkout-service:
+    build:
+      context: .
+      dockerfile: services/checkout-service/Dockerfile
+    container_name: commerce-checkout-service
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - XECURECODE_SERVICE_ID=a1111111-1111-4111-8111-111111111111
+      - XECURECODE_API_KEY=xc_live_node_checkout_test_abcdef1234567890
+      - XECURECODE_ENDPOINT=http://host.docker.internal:4000/api/v1/ingest
+    restart: unless-stopped
+
+  catalog-service:
+    build:
+      context: .
+      dockerfile: services/catalog-service/Dockerfile
+    container_name: commerce-catalog-service
+    ports:
+      - "5002:5002"
+    environment:
+      - PORT=5002
+      - XECURECODE_SERVICE_ID=a2222222-2222-4222-8222-222222222222
+      - XECURECODE_API_KEY=xc_live_python_order_test_abcdef1234567890
+      - XECURECODE_ENDPOINT=http://host.docker.internal:4000/api/v1/ingest
+    restart: unless-stopped
+
+  inventory-service:
+    build:
+      context: .
+      dockerfile: services/inventory-service/Dockerfile
+    container_name: commerce-inventory-service
+    ports:
+      - "5003:5003"
+    environment:
+      - PORT=5003
+      - XECURECODE_SERVICE_ID=a3333333-3333-4333-8333-333333333333
+      - XECURECODE_API_KEY=xc_live_java_inventory_test_abcdef1234567890
+      - XECURECODE_ENDPOINT=http://host.docker.internal:4000/api/v1/ingest
+    restart: unless-stopped

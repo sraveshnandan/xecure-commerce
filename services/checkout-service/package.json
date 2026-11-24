@@ -1,0 +1,14 @@
+{
+  "name": "checkout-service",
+  "version": "1.0.0",
+  "description": "E-Commerce Checkout & Payment Service instrumented with XecureCode Node SDK",
+  "main": "src/server.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@xecurecode/node-sdk": "file:../../packages/node-sdk"
+  }
+}

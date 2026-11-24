@@ -1,0 +1,63 @@
+{
+  "name": "xecurecode-reliability-sdk",
+  "version": "0.3.0",
+  "description": "AI-driven error tracking and reliability SDK for Node.js — automatically captures uncaught exceptions, unhandled rejections, and Express errors with deduplication, error classification, severity scoring, and structured telemetry.",
+  "keywords": [
+    "error-tracking",
+    "reliability",
+    "exception-handler",
+    "monitoring",
+    "observability",
+    "error-monitoring",
+    "node-sdk",
+    "ai-reliability",
+    "error-reporting",
+    "telemetry"
+  ],
+  "author": "XecureCode <hello@xecurecode.in>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xecurecode/reliability-sdk.git"
+  },
+  "homepage": "https://xecurecode.in",
+  "bugs": {
+    "url": "https://github.com/xecurecode/reliability-sdk/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.3",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  }
+}
