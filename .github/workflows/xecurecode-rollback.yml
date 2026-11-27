@@ -1,4 +1,4 @@
-name: XecureCode Automated Emergency Rollback
+name: XecureCode Auto-Rollback
 
 on:
   repository_dispatch:
@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       target_sha:
-        description: "Target stable commit SHA to rollback to"
+        description: 'Target commit SHA to rollback to'
         required: true
-        default: "HEAD~1"
+        default: ''
 
 concurrency:
   group: xecurecode-rollback-main
@@ -16,36 +16,23 @@ concurrency:
 
 jobs:
   rollback:
-    name: Execute Emergency Microservices Rollback
+    name: Roll back xecure-commerce
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout target commit
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.client_payload.target_sha || github.event.inputs.target_sha }}
           fetch-depth: 0
 
-      - name: Checkout Target Stable Commit
+      - name: Revert to target commit without destructive force-push
         run: |
-          TARGET="${{ github.event.client_payload.target_sha || github.event.inputs.target_sha }}"
-          echo "▶ Checking out target release: $TARGET"
-          git checkout "$TARGET"
-
-      - name: Log Rollback Details
-        run: |
-          echo "=================================================="
-          echo " XecureCode Automated Rollback Executing"
-          echo " Target SHA: ${{ github.event.client_payload.target_sha || github.event.inputs.target_sha }}"
-          echo " Triggered by: ${{ github.event.client_payload.triggered_by || 'XecureCode Guard' }}"
-          echo " Incident Root Cause: ${{ github.event.client_payload.root_cause || 'Automatic RCA Trigger' }}"
-          echo " Time: $(date -u)"
-          echo "=================================================="
-
-      - name: Validate Stable Commit Integrity
-        run: |
-          git log -1 --oneline
-          echo "✓ Target stable release validated."
-
-      - name: Rebuild & Redeploy Microservices
-        run: |
-          echo "▶ Redeploying Checkout, Catalog, and Inventory Services at target commit..."
-          echo "✓ Rollback deployment successful. Services restored to healthy state."
+          set -euo pipefail
+          TARGET_SHA="${{ github.event.client_payload.target_sha || github.event.inputs.target_sha }}"
+          echo "Rolling back branch main to healthy release: $TARGET_SHA"
+          git config user.name "XecureCode Bot"
+          git config user.email "bot@xecurecode.in"
+          git fetch origin main
+          git checkout main
+          git merge "$TARGET_SHA" --no-ff -m "Auto-rollback: revert to healthy release $TARGET_SHA"
+          git push origin main
